@@ -29,6 +29,7 @@ def recupID(requests):
     for r in requests:
         file=r+".bib"
         with open(file) as bibtex_file:
+            print("open :"+str(file))
             bib_database = bibtexparser.load(bibtex_file)
             for ref in bib_database.entries:
                 if ref['ID'] not in ida:
@@ -36,6 +37,7 @@ def recupID(requests):
                 else :
                     ida[ref['ID']].append(r)
     print("nombre d'articles différents = "+str(len(ida)))
+    #print(str(ida))
     return ida
 
 def GenGraph(ida,requests):
@@ -46,7 +48,7 @@ def GenGraph(ida,requests):
     for r in requests:
         n={'name':r,'fontsize':12,'size':15}
         nodes.append(n)
-    print(str(nodes))
+    #print(str(nodes))
     for i,v in ida.items():
         n={'name':i,'fontsize':8*len(v),'size':len(v)*4}
         nodes.append(n)
@@ -65,6 +67,7 @@ def ShowBar(ida):
     for i,v in ida.items():
         labels.append(i)
         values.append(len(v))
+    print(str(values))
     x=np.arange(len(labels))
     rects=ax.bar(x, values)
     ax.set_ylabel("nombre d'apparitions")

@@ -1,6 +1,6 @@
 from bib_parser import *
 
-request1=["Mirai","IoT"]    # MODIFY TO ADD NEW FILE NAME AS "r1 r2.bib"
+request1=["mirai","IoT", "Aidra", "amnesia","bashlite","carna","Darlloz","elknot","hajime","hydra","iotreaper","luabot","nyadrop","persirai","psyb0t","qbot","remaiten","satori","soho pharming","spike","themoon","tsunami","vpnfilter","wifatch","xorddos"]    # MODIFY TO ADD NEW FILE NAME AS "r1 r2.bib"
 request2=["botnet","malware"]
 
 def main():
