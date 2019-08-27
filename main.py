@@ -6,11 +6,12 @@ request2=["botnet","malware"]
 def main():
     r = GenRequest(request1,request2)
     print(str(r))
-    ida = recupID(r)
+    path=os.path.abspath(os.path.split(__file__)[0])
+    ida = recupID(r,path)
     idt=sort(ida)
     ShowBar(idt)
     #GenGraph(ida,r)
-    GenDirectories(ida,request1,idt)
+    GenDirectories(ida,request1,idt,path)
 
 
 

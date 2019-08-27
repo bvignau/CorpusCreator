@@ -4,7 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
-from pygraphviz import *
+#from pygraphviz import *
 
 
 def autolabel(rects,ax):
@@ -25,10 +25,11 @@ def GenRequest(request1,request2):
             requests.append(request)
     return requests
 
-def recupID(requests):
+def recupID(requests,path):
     ida={}
+    os.chdir("bib")
     for r in requests:
-        file="bib/"+r+".bib"
+        file=r+".bib"
         with open(file) as bibtex_file:
             print("open :"+str(file))
             bib_database = bibtexparser.load(bibtex_file)
@@ -38,21 +39,26 @@ def recupID(requests):
                 else :
                     ida[ref['ID']].append(r)
     print("nombre d'articles différents = "+str(len(ida)))
+    os.chdir(path)
     #print(str(ida))
     return ida
 
-def GenDoc(directory,request):
-    fname=directory+"/analyse.docx"
+def GenDoc(directory,request,path):
+    os.chdir(directory)
+    fname="analyse.docx"
     f=open(fname,"w")
     f.close()
     for r in request:
-        fname=directory+"/"+r+".csv"
+        fname=r+".csv"
         with open(fname,"w",newline='\n') as csvfile:
             csvwrite=csv.writer(csvfile, delimiter=';',quotechar="'")
             csvwrite.writerow(['Feature','Family','sub-Family','Number','Description','Page','Lines'])
+    os.chdir(path)
+
         
 
-def GenDirectories(ida,request,idt):
+def GenDirectories(ida,request,idt,path):
+    os.mkdir("res")
     i=0
     for t in idt:
         if i < 10:
@@ -63,13 +69,14 @@ def GenDirectories(ida,request,idt):
             num+=str(i)
         else :
             num=str(i)
-        directory="res/"+num+"_"+str(t[0])
+        os.chdir("res")
+        directory=num+"_"+str(t[0])
         os.mkdir(directory)
         finalR=[]
         for r in ida[t[0]] :
             if r.split(" ")[0] in request and r.split(" ")[0] not in finalR:
                 finalR.append(r.split(" ")[0])
-        GenDoc(directory,finalR)
+        GenDoc(directory,finalR,path)
         i+=1
 
 def GenGraph(ida,requests):
