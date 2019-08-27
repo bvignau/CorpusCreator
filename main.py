@@ -11,7 +11,7 @@ def main():
     idt=sort(ida)
     ShowBar(idt)
     #GenGraph(ida,r)
-    GenDirectories(ida,request1,idt,path)
+    #GenDirectories(ida,request1,idt,path)
 
 
 

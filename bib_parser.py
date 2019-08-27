@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 import csv
+
 #from pygraphviz import *
 
 
@@ -28,6 +29,8 @@ def GenRequest(request1,request2):
 def recupID(requests,path):
     ida={}
     os.chdir("bib")
+    db = bibtexparser.bibdatabase.BibDatabase()
+    print(str(db.entries))
     for r in requests:
         file=r+".bib"
         with open(file) as bibtex_file:
@@ -36,10 +39,14 @@ def recupID(requests,path):
             for ref in bib_database.entries:
                 if ref['ID'] not in ida:
                     ida[ref['ID']]=[r]
+                    db.entries.append(ref)
                 else :
                     ida[ref['ID']].append(r)
     print("nombre d'articles différents = "+str(len(ida)))
     os.chdir(path)
+    with open("final.bib",'w') as bibtex_file :
+        writer= bibtexparser.bwriter.BibTexWriter()
+        bibtex_file.write(writer.write(db))
     #print(str(ida))
     return ida
 
