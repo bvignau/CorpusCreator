@@ -18,10 +18,10 @@ def autolabel(rects,ax):
                     textcoords="offset points",
                     ha='center', va='bottom')
 
-def GenRequest(request1,request2):
+def GenRequest(req):
     requests=[]
-    for r1 in request1:
-        for r2 in request2:
+    for r1 in req[0]:
+        for r2 in req[1]:
             request=r1+" "+r2
             requests.append(request)
     return requests
@@ -30,7 +30,7 @@ def recupID(requests,path):
     ida={}
     os.chdir("bib")
     db = bibtexparser.bibdatabase.BibDatabase()
-    print(str(db.entries))
+    #print(str(db.entries))
     for r in requests:
         file=r+".bib"
         with open(file) as bibtex_file:
@@ -50,22 +50,25 @@ def recupID(requests,path):
     #print(str(ida))
     return ida
 
-def GenDoc(directory,request,path):
+def GenDoc(directory,request,path,CSV,TEXTE):
     os.chdir(directory)
-    fname="analyse.docx"
-    f=open(fname,"w")
-    f.close()
+    fname="analyse.txt"
+    with open(fname,"w") as f:
+        for t in TEXTE:
+            f.writelines([t,'\n'])
+        f.close()
     for r in request:
         fname=r+".csv"
         with open(fname,"w",newline='\n') as csvfile:
             csvwrite=csv.writer(csvfile, delimiter=';',quotechar="'")
-            csvwrite.writerow(['Feature','Family','sub-Family','Number','Description','Page','Lines'])
+            csvwrite.writerow(CSV)
     os.chdir(path)
 
         
 
-def GenDirectories(ida,request,idt,path):
-    os.mkdir("res")
+def GenDirectories(ida,request,idt,path,CSV,TEXTE):
+    if not os.path.exists("res"):
+        os.mkdir("res")
     i=0
     for t in idt:
         if i < 10:
@@ -83,7 +86,7 @@ def GenDirectories(ida,request,idt,path):
         for r in ida[t[0]] :
             if r.split(" ")[0] in request and r.split(" ")[0] not in finalR:
                 finalR.append(r.split(" ")[0])
-        GenDoc(directory,finalR,path)
+        GenDoc(directory,finalR,path,CSV,TEXTE)
         i+=1
 
 def GenGraph(ida,requests):
@@ -112,7 +115,7 @@ def sort(ida):
         d[ref]=len(req)
     idt=sorted(d.items(), key=lambda t: t[1])
     idt.reverse()
-    print(str(idt))
+    #print(str(idt))
     return idt
 
 def ShowBar(idt):
