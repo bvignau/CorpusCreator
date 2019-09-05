@@ -39,7 +39,7 @@ def recupID(requests,path):
             for ref in bib_database.entries:
                 if ref['ID'] not in ida:
                     ida[ref['ID']]=[r]
-                    db.entries.append(ref)
+                    db.entries.append(ref) # to generate the final bib file
                 else :
                     ida[ref['ID']].append(r)
     print("nombre d'articles différents = "+str(len(ida)))
@@ -48,12 +48,13 @@ def recupID(requests,path):
         writer= bibtexparser.bwriter.BibTexWriter()
         bibtex_file.write(writer.write(db))
     #print(str(ida))
-    return ida
+    return ida, db
 
-def GenDoc(directory,request,path,CSV,TEXTE):
+def GenDoc(directory,request,path,CSV,TEXTE,title):
     os.chdir(directory)
     fname="analyse.txt"
     with open(fname,"w") as f:
+        f.writelines([title,'\n'])
         for t in TEXTE:
             f.writelines([t,'\n'])
         f.close()
@@ -64,9 +65,13 @@ def GenDoc(directory,request,path,CSV,TEXTE):
             csvwrite.writerow(CSV)
     os.chdir(path)
 
-        
 
-def GenDirectories(ida,request,idt,path,CSV,TEXTE):
+def GetTitleFromRef(ref, db):
+    for r in db.entries:
+        if r['ID'] == ref :
+            return r['title']
+
+def GenDirectories(ida,request,idt,path,CSV,TEXTE,db):
     if not os.path.exists("res"):
         os.mkdir("res")
     i=0
@@ -86,7 +91,9 @@ def GenDirectories(ida,request,idt,path,CSV,TEXTE):
         for r in ida[t[0]] :
             if r.split(" ")[0] in request and r.split(" ")[0] not in finalR:
                 finalR.append(r.split(" ")[0])
-        GenDoc(directory,finalR,path,CSV,TEXTE)
+
+        title=GetTitleFromRef(t[0], db)
+        GenDoc(directory,finalR,path,CSV,TEXTE,title)
         i+=1
 
 def GenGraph(ida,requests):

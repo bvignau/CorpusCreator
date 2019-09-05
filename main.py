@@ -25,11 +25,11 @@ def main():
     r = GenRequest(requests)
     print(str(r))
     path=os.path.abspath(os.path.split(__file__)[0])
-    ida = recupID(r,path)
+    ida,db = recupID(r,path)
     idt=sort(ida)
     ShowBar(idt)
     #GenGraph(ida,r)
-    GenDirectories(ida,request1,idt,path,CSV,TEXTE)
+    GenDirectories(ida,request1,idt,path,CSV,TEXTE,db)
 
 
 
